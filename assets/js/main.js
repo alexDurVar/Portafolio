@@ -43,7 +43,7 @@
   /**
    * Navbar links active state on scroll
    */
-  let navbarlinks = select('#navbar .scrollto', true)
+  /*let navbarlinks = select('#navbar .scrollto', true)
   const navbarlinksActive = () => {
     let position = window.scrollY + 200
     navbarlinks.forEach(navbarlink => {
@@ -58,7 +58,56 @@
     })
   }
   window.addEventListener('load', navbarlinksActive)
-  onscroll(document, navbarlinksActive)
+  onscroll(document, navbarlinksActive)*/
+
+/**
+ * Navbar links active state on scroll
+ */
+let navbarlinks = select('#navbar .scrollto', true);
+
+window.addEventListener('load', () => {
+  navbarlinksActive();
+
+  // Llamamos a la función navbarlinksActive() cuando la página se carga
+});
+
+onscroll(document, () => {
+  navbarlinksActive();
+
+  // Llamamos a la función navbarlinksActive() cada vez que se produce un desplazamiento
+});
+
+function navbarlinksActive() {
+  let position = window.scrollY + 200;
+  let windowHeight = window.innerHeight;
+  let documentHeight = document.body.clientHeight;
+
+  // Si la posición de desplazamiento + la altura de la ventana es mayor o igual que la altura total del documento,
+  // entonces estamos en la parte inferior de la página
+  if (position + windowHeight >= documentHeight) {
+    // Removemos la clase 'active' de todos los enlaces
+    navbarlinks.forEach(navbarlink => {
+      navbarlink.classList.remove('active');
+    });
+
+    // Añadimos la clase 'active' al enlace "Contacto"
+    select('#navbar .scrollto[href="#contact"]').classList.add('active');
+  } else {
+    // Si no estamos en la parte inferior de la página, seguimos la lógica original
+    navbarlinks.forEach(navbarlink => {
+      if (!navbarlink.hash) return;
+      let section = select(navbarlink.hash);
+      if (!section) return;
+      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+        navbarlink.classList.add('active');
+      } else {
+        navbarlink.classList.remove('active');
+      }
+    });
+  }
+}
+
+
 
   /**
    * Scrolls to an element with header offset
